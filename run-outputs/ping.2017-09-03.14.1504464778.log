@@ -1,9 +1,0 @@
-ec2-52-15-104-4.us-east-2.compute.amazonaws.com | SUCCESS => {
-    "changed": false, 
-    "ping": "pong"
-}
-ec2-52-15-195-50.us-east-2.compute.amazonaws.com | UNREACHABLE! => {
-    "changed": false, 
-    "msg": "Failed to connect to the host via ssh: Host key verification failed.\r\n", 
-    "unreachable": true
-}
