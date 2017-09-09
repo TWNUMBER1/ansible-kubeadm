@@ -1,0 +1,21 @@
+Using /Users/hsutsungchun/ansible-kubeadm/ansible.cfg as config file
+ERROR! this task 'pause' has extra params, which is only allowed in the following modules: command, win_command, shell, win_shell, script, include, include_vars, add_host, group_by, set_fact, raw, meta
+
+The error appears to have been in '/Users/hsutsungchun/ansible-kubeadm/roles/master/tasks/main.yml': line 19, column 3, but may
+be elsewhere in the file depending on the exact syntax problem.
+
+The offending line appears to be:
+
+
+- name: Wait for images pulling and service to start
+  ^ here
+
+
+The error appears to have been in '/Users/hsutsungchun/ansible-kubeadm/roles/master/tasks/main.yml': line 19, column 3, but may
+be elsewhere in the file depending on the exact syntax problem.
+
+The offending line appears to be:
+
+
+- name: Wait for images pulling and service to start
+  ^ here

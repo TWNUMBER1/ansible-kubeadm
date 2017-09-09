@@ -1,0 +1,66 @@
+Using /Users/hsutsungchun/ansible-kubeadm/ansible.cfg as config file
+
+PLAY [all] ************************************************************************************************************************************
+
+TASK [Gathering Facts] ************************************************************************************************************************
+ok: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com]
+ok: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com]
+
+TASK [reset : Reset cluster] ******************************************************************************************************************
+fatal: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com]: FAILED! => {"changed": false, "cmd": "/usr/bin/kudeadm reset", "failed": true, "msg": "[Errno 2] No such file or directory: '/usr/bin/kudeadm'", "rc": 2}
+...ignoring
+fatal: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com]: FAILED! => {"changed": false, "cmd": "/usr/bin/kudeadm reset", "failed": true, "msg": "[Errno 2] No such file or directory: '/usr/bin/kudeadm'", "rc": 2}
+...ignoring
+
+TASK [reset : systemctl stop kubelet] *********************************************************************************************************
+changed: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com] => {"changed": true, "cmd": "for i in $(/usr/bin/systemctl list-unit-files --no-legend --no-pager -l | grep --color=never -o *.*.slice | grep kubepod); do echo $i; systemctl stop $i; done", "delta": "0:00:00.003802", "end": "2017-09-03 15:50:31.558791", "rc": 0, "start": "2017-09-03 15:50:31.554989", "stderr": "/bin/sh: 1: /usr/bin/systemctl: not found", "stderr_lines": ["/bin/sh: 1: /usr/bin/systemctl: not found"], "stdout": "", "stdout_lines": []}
+changed: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com] => {"changed": true, "cmd": "for i in $(/usr/bin/systemctl list-unit-files --no-legend --no-pager -l | grep --color=never -o *.*.slice | grep kubepod); do echo $i; systemctl stop $i; done", "delta": "0:00:00.003417", "end": "2017-09-03 15:50:31.604538", "rc": 0, "start": "2017-09-03 15:50:31.601121", "stderr": "/bin/sh: 1: /usr/bin/systemctl: not found", "stderr_lines": ["/bin/sh: 1: /usr/bin/systemctl: not found"], "stdout": "", "stdout_lines": []}
+
+TASK [reset : remove pacakges] ****************************************************************************************************************
+ok: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com] => (item=kubelet) => {"changed": false, "item": "kubelet"}
+ok: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com] => (item=kubelet) => {"changed": false, "item": "kubelet"}
+ok: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com] => (item=kubectl) => {"changed": false, "item": "kubectl"}
+ok: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com] => (item=kubectl) => {"changed": false, "item": "kubectl"}
+ok: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com] => (item=kubeadm) => {"changed": false, "item": "kubeadm"}
+ok: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com] => (item=kubeadm) => {"changed": false, "item": "kubeadm"}
+ok: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com] => (item=kubernetes-cni) => {"changed": false, "item": "kubernetes-cni"}
+ok: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com] => (item=kubernetes-cni) => {"changed": false, "item": "kubernetes-cni"}
+
+TASK [reset : cni0 IP allocation issue] *******************************************************************************************************
+ [WARNING]: Consider using file module with state=absent rather than running rm
+fatal: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com]: FAILED! => {"changed": true, "cmd": "rm -rf /var/lib/cni/ /var/lib/kubelet/* /etc/cni/ /run/flannel ; ifconfig cni0 down; ifconfig flannel.1 down;", "delta": "0:00:00.005780", "end": "2017-09-03 15:50:37.843688", "failed": true, "rc": 255, "start": "2017-09-03 15:50:37.837908", "stderr": "cni0: ERROR while getting interface flags: No such device\nflannel.1: ERROR while getting interface flags: No such device", "stderr_lines": ["cni0: ERROR while getting interface flags: No such device", "flannel.1: ERROR while getting interface flags: No such device"], "stdout": "", "stdout_lines": []}
+...ignoring
+fatal: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com]: FAILED! => {"changed": true, "cmd": "rm -rf /var/lib/cni/ /var/lib/kubelet/* /etc/cni/ /run/flannel ; ifconfig cni0 down; ifconfig flannel.1 down;", "delta": "0:00:00.005502", "end": "2017-09-03 15:50:37.896942", "failed": true, "rc": 255, "start": "2017-09-03 15:50:37.891440", "stderr": "cni0: ERROR while getting interface flags: No such device\nflannel.1: ERROR while getting interface flags: No such device", "stderr_lines": ["cni0: ERROR while getting interface flags: No such device", "flannel.1: ERROR while getting interface flags: No such device"], "stdout": "", "stdout_lines": []}
+...ignoring
+
+PLAY [all] ************************************************************************************************************************************
+
+TASK [Gathering Facts] ************************************************************************************************************************
+ok: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com]
+ok: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com]
+
+TASK [common : Add apt key] *******************************************************************************************************************
+changed: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com] => {"changed": true}
+changed: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com] => {"changed": true}
+
+TASK [common : Add kubernetes apt repo] *******************************************************************************************************
+changed: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com] => {"changed": true, "repo": "deb http://apt.kubernetes.io/ kubernetes-xenial main", "state": "present"}
+changed: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com] => {"changed": true, "repo": "deb http://apt.kubernetes.io/ kubernetes-xenial main", "state": "present"}
+
+TASK [common : Install essential packages] ****************************************************************************************************
+failed: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com] (item=kubelet) => {"failed": true, "item": "kubelet", "msg": "Unsupported parameters for (apt) module: name:. Supported parameters include: allow_unauthenticated,autoremove,cache_valid_time,deb,default_release,dpkg_options,force,install_recommends,only_upgrade,package,purge,state,update_cache,upgrade"}
+failed: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com] (item=kubelet) => {"failed": true, "item": "kubelet", "msg": "Unsupported parameters for (apt) module: name:. Supported parameters include: allow_unauthenticated,autoremove,cache_valid_time,deb,default_release,dpkg_options,force,install_recommends,only_upgrade,package,purge,state,update_cache,upgrade"}
+failed: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com] (item=kubeadm) => {"failed": true, "item": "kubeadm", "msg": "Unsupported parameters for (apt) module: name:. Supported parameters include: allow_unauthenticated,autoremove,cache_valid_time,deb,default_release,dpkg_options,force,install_recommends,only_upgrade,package,purge,state,update_cache,upgrade"}
+failed: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com] (item=kubeadm) => {"failed": true, "item": "kubeadm", "msg": "Unsupported parameters for (apt) module: name:. Supported parameters include: allow_unauthenticated,autoremove,cache_valid_time,deb,default_release,dpkg_options,force,install_recommends,only_upgrade,package,purge,state,update_cache,upgrade"}
+failed: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com] (item=kubectl) => {"failed": true, "item": "kubectl", "msg": "Unsupported parameters for (apt) module: name:. Supported parameters include: allow_unauthenticated,autoremove,cache_valid_time,deb,default_release,dpkg_options,force,install_recommends,only_upgrade,package,purge,state,update_cache,upgrade"}
+failed: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com] (item=kubectl) => {"failed": true, "item": "kubectl", "msg": "Unsupported parameters for (apt) module: name:. Supported parameters include: allow_unauthenticated,autoremove,cache_valid_time,deb,default_release,dpkg_options,force,install_recommends,only_upgrade,package,purge,state,update_cache,upgrade"}
+failed: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com] (item=kubernetes-cni) => {"failed": true, "item": "kubernetes-cni", "msg": "Unsupported parameters for (apt) module: name:. Supported parameters include: allow_unauthenticated,autoremove,cache_valid_time,deb,default_release,dpkg_options,force,install_recommends,only_upgrade,package,purge,state,update_cache,upgrade"}
+failed: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com] (item=kubernetes-cni) => {"failed": true, "item": "kubernetes-cni", "msg": "Unsupported parameters for (apt) module: name:. Supported parameters include: allow_unauthenticated,autoremove,cache_valid_time,deb,default_release,dpkg_options,force,install_recommends,only_upgrade,package,purge,state,update_cache,upgrade"}
+failed: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com] (item=docker.io) => {"failed": true, "item": "docker.io", "msg": "Unsupported parameters for (apt) module: name:. Supported parameters include: allow_unauthenticated,autoremove,cache_valid_time,deb,default_release,dpkg_options,force,install_recommends,only_upgrade,package,purge,state,update_cache,upgrade"}
+failed: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com] (item=docker.io) => {"failed": true, "item": "docker.io", "msg": "Unsupported parameters for (apt) module: name:. Supported parameters include: allow_unauthenticated,autoremove,cache_valid_time,deb,default_release,dpkg_options,force,install_recommends,only_upgrade,package,purge,state,update_cache,upgrade"}
+	to retry, use: --limit @/Users/hsutsungchun/ansible-kubeadm/site.retry
+
+PLAY RECAP ************************************************************************************************************************************
+ec2-13-58-13-217.us-east-2.compute.amazonaws.com : ok=8    changed=4    unreachable=0    failed=1   
+ec2-18-220-174-41.us-east-2.compute.amazonaws.com : ok=8    changed=4    unreachable=0    failed=1   
+

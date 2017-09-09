@@ -1,0 +1,16 @@
+---
+- name: copy app yml files
+  copy: 
+    src: "{{item}}"
+    dest: "/tmp/{{item}}"
+  with_items:
+    - deployment.yml 
+    - service.yml
+
+- name: bring up application
+  command: /usr/bin/kubectl --kubeconfig=/etc/kubernetes/admin.conf create -f "/tmp/{{item}}"
+  with_items:
+    - deployment.yml
+    - service.yml
+
+    

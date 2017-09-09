@@ -1,0 +1,9 @@
+---
+- set_fact: kubeadm_token={{ hostvars[groups['kube-master'][0]['kubeadm_token'] }}
+  when: kubeadm_token is not defined
+
+- name: Wait for images pulling and service to start
+  pause: seconds=10
+
+- name: Join cluster
+  shell: /usr/bin/kubeadm join {{ groups['kube-master'][0] }}:6443 --token {{ kubeadm_token }} 

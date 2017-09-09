@@ -1,0 +1,29 @@
+--- 
+- name: Reset cluster
+  shell: /usr/bin/kubeadm reset 
+  ignore_errors: yes
+  tags:
+    - reset
+
+- name: systemctl stop kubelet
+  shell: 'for i in $(/usr/bin/systemctl list-unit-files --no-legend --no-pager -l | grep --color=never -o *.*.slice | grep kubepod); do echo $i; systemctl stop $i; done' 
+  tags:
+    - reset
+
+- name: remove pacakges
+  package: name={{item}} state=absent
+  with_items:
+    - kubelet
+    - kubectl
+    - kubeadm
+    - kubernetes-cni
+  tags:
+    - uninstall
+    - reset
+
+- name: cni0 IP allocation issue
+  shell: 'rm -rf /var/lib/cni/ /var/lib/kubelet/* /etc/cni/ /run/flannel ; ifconfig cni0 down; ifconfig flannel.1 down;'
+  ignore_errors: yes
+  tags:
+    - uninstall
+    - reset 

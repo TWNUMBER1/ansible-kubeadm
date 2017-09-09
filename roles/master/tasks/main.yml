@@ -1,0 +1,57 @@
+---
+- name: Generate cluster token
+  command: /usr/bin/kubeadm token generate
+  register: kubeadm_token_generate
+  when: kubeadm_token is not defined
+  tags:
+    - init
+
+- set_fact: kubeadm_token={{ kubeadm_token_generate.stdout}}
+  when: kubeadm_token is not defined
+  tags:
+    - init
+
+- name: Initialize kubernetes
+  shell: /usr/bin/kubeadm init --token {{kubeadm_token}} --kubernetes-version {{kubernetes_version}} --pod-network-cidr=10.244.0.0/16
+  tags:
+    - init
+
+- name: Wait for images pulling and service to start
+  pause: seconds=10
+
+- name: Forcing restart of services
+  meta: flush_handlers
+
+- name: Wait for images pulling and service to start
+  pause: seconds=10
+
+- name: sanity check for pods
+  environment: 
+    KUBECONFIG: /etc/kubernetes/admin.conf
+  shell: "/usr/bin/kubectl get --namespace kube-system pods | tail -n +2 | grep -v -w 'Running' | grep -v 'kube-dns' || true"
+  register: command_result
+  tags:
+    - sanity
+  until: command_result.stdout == ""
+  retries: 20
+  delay: 3
+
+- name: copy flannel files
+  copy:
+    src: "{{item}}"
+    dest: "/tmp/{{item}}"
+  with_items:
+    - kube-flannel.yml
+    - kube-flannel-rbac.yml
+    - kubernetes-dashboard.yml
+
+- name: apply flannel network plugin
+  environment: 
+    KUBECONFIG: /etc/kubernetes/admin.conf
+  command: /usr/bin/kubectl apply -f "/tmp/{{item}}"
+  with_items:
+    - kube-flannel.yml
+    - kube-flannel-rbac.yml
+    - kubernetes-dashboard.yml
+
+

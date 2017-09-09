@@ -1,0 +1,6 @@
+---
+- include: reset.yaml
+- include: common.yml
+- include: master.yml
+- include: node.yml
+- include: app.yml

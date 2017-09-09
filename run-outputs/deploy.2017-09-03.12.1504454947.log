@@ -1,0 +1,39 @@
+Using /Users/hsutsungchun/ansible-kubeadm/ansible.cfg as config file
+
+PLAY [all] ************************************************************************************************************************************
+
+TASK [Gathering Facts] ************************************************************************************************************************
+ok: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com]
+ok: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com]
+
+TASK [reset : Reset cluster] ******************************************************************************************************************
+fatal: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com]: FAILED! => {"changed": true, "cmd": "/usr/bin/kudeadm reset", "delta": "0:00:00.001733", "end": "2017-09-03 16:09:11.288854", "failed": true, "rc": 127, "start": "2017-09-03 16:09:11.287121", "stderr": "/bin/sh: 1: /usr/bin/kudeadm: not found", "stderr_lines": ["/bin/sh: 1: /usr/bin/kudeadm: not found"], "stdout": "", "stdout_lines": []}
+...ignoring
+fatal: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com]: FAILED! => {"changed": true, "cmd": "/usr/bin/kudeadm reset", "delta": "0:00:00.001901", "end": "2017-09-03 16:09:11.409904", "failed": true, "rc": 127, "start": "2017-09-03 16:09:11.408003", "stderr": "/bin/sh: 1: /usr/bin/kudeadm: not found", "stderr_lines": ["/bin/sh: 1: /usr/bin/kudeadm: not found"], "stdout": "", "stdout_lines": []}
+...ignoring
+
+TASK [reset : systemctl stop kubelet] *********************************************************************************************************
+changed: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com] => {"changed": true, "cmd": "for i in $(/usr/bin/systemctl list-unit-files --no-legend --no-pager -l | grep --color=never -o *.*.slice | grep kubepod); do echo $i; systemctl stop $i; done", "delta": "0:00:00.004109", "end": "2017-09-03 16:09:12.398343", "rc": 0, "start": "2017-09-03 16:09:12.394234", "stderr": "/bin/sh: 1: /usr/bin/systemctl: not found", "stderr_lines": ["/bin/sh: 1: /usr/bin/systemctl: not found"], "stdout": "", "stdout_lines": []}
+changed: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com] => {"changed": true, "cmd": "for i in $(/usr/bin/systemctl list-unit-files --no-legend --no-pager -l | grep --color=never -o *.*.slice | grep kubepod); do echo $i; systemctl stop $i; done", "delta": "0:00:00.003404", "end": "2017-09-03 16:09:12.538376", "rc": 0, "start": "2017-09-03 16:09:12.534972", "stderr": "/bin/sh: 1: /usr/bin/systemctl: not found", "stderr_lines": ["/bin/sh: 1: /usr/bin/systemctl: not found"], "stdout": "", "stdout_lines": []}
+
+TASK [reset : remove pacakges] ****************************************************************************************************************
+ok: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com] => (item=kubelet) => {"changed": false, "item": "kubelet"}
+ok: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com] => (item=kubelet) => {"changed": false, "item": "kubelet"}
+ok: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com] => (item=kubectl) => {"changed": false, "item": "kubectl"}
+ok: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com] => (item=kubectl) => {"changed": false, "item": "kubectl"}
+ok: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com] => (item=kubeadm) => {"changed": false, "item": "kubeadm"}
+ok: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com] => (item=kubeadm) => {"changed": false, "item": "kubeadm"}
+ok: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com] => (item=kubernetes-cni) => {"changed": false, "item": "kubernetes-cni"}
+ok: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com] => (item=kubernetes-cni) => {"changed": false, "item": "kubernetes-cni"}
+
+TASK [reset : cni0 IP allocation issue] *******************************************************************************************************
+ [WARNING]: Consider using file module with state=absent rather than running rm
+fatal: [ec2-18-220-174-41.us-east-2.compute.amazonaws.com]: FAILED! => {"changed": true, "cmd": "rm -rf /var/lib/cni/ /var/lib/kubelet/* /etc/cni/ /run/flannel ; ifconfig cni0 down; ifconfig flannel.1 down;", "delta": "0:00:00.005454", "end": "2017-09-03 16:09:20.418145", "failed": true, "rc": 255, "start": "2017-09-03 16:09:20.412691", "stderr": "cni0: ERROR while getting interface flags: No such device\nflannel.1: ERROR while getting interface flags: No such device", "stderr_lines": ["cni0: ERROR while getting interface flags: No such device", "flannel.1: ERROR while getting interface flags: No such device"], "stdout": "", "stdout_lines": []}
+...ignoring
+fatal: [ec2-13-58-13-217.us-east-2.compute.amazonaws.com]: FAILED! => {"changed": true, "cmd": "rm -rf /var/lib/cni/ /var/lib/kubelet/* /etc/cni/ /run/flannel ; ifconfig cni0 down; ifconfig flannel.1 down;", "delta": "0:00:00.006469", "end": "2017-09-03 16:09:20.571737", "failed": true, "rc": 255, "start": "2017-09-03 16:09:20.565268", "stderr": "rm: cannot remove '/var/lib/kubelet/pods/0d12b6e4-90c2-11e7-a9f3-02b77b377326/volumes/kubernetes.io~secret/kube-proxy-token-f7hp7': Device or resource busy\ncni0: ERROR while getting interface flags: No such device\nflannel.1: ERROR while getting interface flags: No such device", "stderr_lines": ["rm: cannot remove '/var/lib/kubelet/pods/0d12b6e4-90c2-11e7-a9f3-02b77b377326/volumes/kubernetes.io~secret/kube-proxy-token-f7hp7': Device or resource busy", "cni0: ERROR while getting interface flags: No such device", "flannel.1: ERROR while getting interface flags: No such device"], "stdout": "", "stdout_lines": []}
+...ignoring
+
+PLAY RECAP ************************************************************************************************************************************
+ec2-13-58-13-217.us-east-2.compute.amazonaws.com : ok=5    changed=3    unreachable=0    failed=0   
+ec2-18-220-174-41.us-east-2.compute.amazonaws.com : ok=5    changed=3    unreachable=0    failed=0   
+

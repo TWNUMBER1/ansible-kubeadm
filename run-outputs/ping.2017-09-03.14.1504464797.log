@@ -1,0 +1,8 @@
+ec2-52-15-104-4.us-east-2.compute.amazonaws.com | SUCCESS => {
+    "changed": false, 
+    "ping": "pong"
+}
+ec2-52-15-195-50.us-east-2.compute.amazonaws.com | SUCCESS => {
+    "changed": false, 
+    "ping": "pong"
+}
