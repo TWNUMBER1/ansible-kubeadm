@@ -1,0 +1,4 @@
+---
+apps:
+  - postgres.yml
+  - flask.yml

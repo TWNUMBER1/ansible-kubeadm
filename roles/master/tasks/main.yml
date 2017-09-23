@@ -54,4 +54,10 @@
     - kube-flannel-rbac.yml
     - kubernetes-dashboard.yml
 
+# For single-node setup
+- name: allow pods to be able to put into master node
+  environment: 
+    KUBECONFIG: /etc/kubernetes/admin.conf
+  command: /usr/bin/kubectl taint nodes --all node-role.kubernetes.io/master-
+
 

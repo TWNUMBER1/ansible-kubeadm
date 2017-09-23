@@ -1,0 +1,38 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: tsungchh/postgres_docker:1.0.0
+        imagePullPolicy: "IfNotPresent"
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgredb
+      volumes:
+          - name: postgredb
+            hostPath:
+              # directory location on host
+              path: /data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: postgres
+  name: postgres
+spec:
+  type: NodePort
+  ports:
+  - port: 5432
+  selector:
+    name: postgres

@@ -16,3 +16,8 @@ make depend_ubuntu // to setup environment
   ```sh
   make deploy
   ```
+
+### Bounce app
+  ```sh
+  make bounce [APP=<app name>]
+  ``` 

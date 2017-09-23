@@ -3,14 +3,34 @@
   copy: 
     src: "{{item}}"
     dest: "/tmp/{{item}}"
-  with_items:
-    - deployment.yml 
-    - service.yml
+  with_items: "{{ apps }}"
 
-- name: bring up application
-  command: /usr/bin/kubectl --kubeconfig=/etc/kubernetes/admin.conf create -f "/tmp/{{item}}"
-  with_items:
-    - deployment.yml
-    - service.yml
+- name: stop all application
+  environment: 
+    KUBECONFIG: /etc/kubernetes/admin.conf
+  ignore_errors: yes
+  command: /usr/bin/kubectl delete -f "/tmp/{{item}}"
+  when: APP is not defined 
+  with_items: "{{ apps }}"
+
+- name: stop application
+  environment: 
+    KUBECONFIG: /etc/kubernetes/admin.conf
+  ignore_errors: yes
+  command: /usr/bin/kubectl delete -f "/tmp/{{APP}}"
+  when: APP is defined 
+
+- name: bring up all application
+  environment:  
+    KUBECONFIG: /etc/kubernetes/admin.conf
+  command: /usr/bin/kubectl create -f "/tmp/{{item}}"
+  with_items: "{{ apps }}"
+  when: APP is not defined 
+
+- name: bring application
+  environment: 
+    KUBECONFIG: /etc/kubernetes/admin.conf
+  command: /usr/bin/kubectl create -f "/tmp/{{APP}}"
+  when: APP is defined 
 
     

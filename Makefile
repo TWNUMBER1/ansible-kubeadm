@@ -1,5 +1,6 @@
 REMOTE_USERNAME ?= ubuntu
 OUTPUT_FOLDER ?= ./run-outputs
+APP := 
 
 clean:
 	find . -name *.retry -delete && rm -rf run-outputs/*
@@ -12,5 +13,12 @@ deploy:
 
 ping: 
 	ansible all -m ping --user=$(REMOTE_USERNAME) 2>&1 | tee $(OUTPUT_FOLDER)/ping.`date +%F.%H.%s`.log
+
+bounce:
+ifeq ($(APP),)
+	ansible-playbook app.yml -v --user=$(REMOTE_USERNAME) 2>&1 | tee $(OUTPUT_FOLDER)/bounce.`date +%F.%H.%s`.log 
+else
+	ansible-playbook app.yml -v --extra-vars "APP=${APP}.yml" --user=$(REMOTE_USERNAME) 2>&1 | tee $(OUTPUT_FOLDER)/bounce.`date +%F.%H.%s`.log 
+endif
 
 .PHONY: clean deploy ping depend_ubuntu
