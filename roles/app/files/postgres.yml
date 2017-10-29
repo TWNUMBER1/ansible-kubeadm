@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: tsungchh/postgres_docker:1.0.0
+        image: tsungchh/postgres_docker:1.0.1
         imagePullPolicy: "IfNotPresent"
         ports:
         - containerPort: 5432

@@ -9,7 +9,7 @@
   environment: 
     KUBECONFIG: /etc/kubernetes/admin.conf
   ignore_errors: yes
-  command: /usr/bin/kubectl delete -f "/tmp/{{item}}"
+  command: kubectl delete -f "/tmp/{{item}}"
   when: APP is not defined 
   with_items: "{{ apps }}"
 
@@ -17,20 +17,20 @@
   environment: 
     KUBECONFIG: /etc/kubernetes/admin.conf
   ignore_errors: yes
-  command: /usr/bin/kubectl delete -f "/tmp/{{APP}}"
+  command: kubectl delete -f "/tmp/{{APP}}"
   when: APP is defined 
 
 - name: bring up all application
   environment:  
     KUBECONFIG: /etc/kubernetes/admin.conf
-  command: /usr/bin/kubectl create -f "/tmp/{{item}}"
+  command: kubectl create -f "/tmp/{{item}}"
   with_items: "{{ apps }}"
   when: APP is not defined 
 
 - name: bring application
   environment: 
     KUBECONFIG: /etc/kubernetes/admin.conf
-  command: /usr/bin/kubectl create -f "/tmp/{{APP}}"
+  command: kubectl create -f "/tmp/{{APP}}"
   when: APP is defined 
 
     
